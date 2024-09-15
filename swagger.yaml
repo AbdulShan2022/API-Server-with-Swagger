@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: CRUD APIs WITH SWAGGER
+  description: The APIs are fully documented with Swagger UI and allow for creating, retrieving, updating, and deleting users.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /:
+    get:
+      summary: Root endpoint
+      description: Returns a welcome message
+      responses:
+        '200':
+          description: A simple message
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Welcome to the API Server with CRUD
+
+  /users:
+    get:
+      summary: Get all users
+      description: Retrieve all users from the system
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create a new user
+      description: Add a new user to the system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    get:
+      summary: Get a user by ID
+      description: Retrieve a single user by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A single user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    put:
+      summary: Update a user by ID
+      description: Modify an existing user's details by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    delete:
+      summary: Delete a user by ID
+      description: Remove a user from the system by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
+
+    NewUser:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: john.doe@example.com
